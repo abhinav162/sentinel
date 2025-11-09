@@ -1,0 +1,28 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+  log_level: debug
+
+clients:
+  - url: https://loki.abhinavaditya.com/loki/api/v1/push
+
+positions:
+  filename: /tmp/positions.yaml
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*log
+
+  - job_name: pm2
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: pm2
+          __path__: /var/log/pm2/*.log
+

@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  loki:
+    image: grafana/loki:3.4.1
+    container_name: loki
+    command: -config.file=/mnt/config/loki-config.yaml
+    ports:
+      - "3100:3100"
+    volumes:
+      # Mount the local Loki config directory
+      - ./loki-config.yaml:/mnt/config/loki-config.yaml:ro
+
+      # Optional: persist Loki's local data (if you use filesystem storage)
+      - ./data:/tmp/loki
+
+    restart: unless-stopped
+    networks:
+      - loki-net
+
+networks:
+  loki-net:
+    driver: bridge

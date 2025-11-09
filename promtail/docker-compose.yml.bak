@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      # 🧠 Mount your Promtail config file
+      - ./promtail-config.yml:/etc/promtail/config.yml:ro
+
+      # 📁 Mount system logs
+      - /var/log:/var/log
+
+      # 🐳 Mount Docker logs (for container log collection)
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
+
